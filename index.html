@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Game Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #282c34;
+            color: white;
+        }
+        #gameArea {
+            margin: 10px auto;
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+            background-color: white;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        #player {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            position: absolute;
+            border-radius: 50%;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #score {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <p id="score">Xal: 0</p>
+    <div id="gameArea">
+        <div id="player"></div>
+    </div>
+    <button id="reset">Yenile</button>
+
+    <script>
+        const gameArea = document.getElementById("gameArea");
+        const player = document.getElementById("player");
+        const resetButton = document.getElementById("reset");
+        const scoreDisplay = document.getElementById("score");
+        let score = 0;
+        let gameActive = true;
+
+        function movePlayer() {
+            if (!gameActive) return;
+            const maxX = gameArea.clientWidth - player.clientWidth;
+            const maxY = gameArea.clientHeight - player.clientHeight;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            player.style.left = `${randomX}px`;
+            player.style.top = `${randomY}px`;
+        }
+
+        player.addEventListener("click", function(event) {
+            if (!gameActive) return;
+            score++;
+            scoreDisplay.textContent = `Score: ${score}`;
+        });
+
+        gameArea.addEventListener("click", function(event) {
+            if (!gameActive) return;
+            if (event.target !== player) {
+                score--;
+                scoreDisplay.textContent = `Score: ${score}`;
+            }
+        });
+
+        resetButton.addEventListener("click", function() {
+            score = 0;
+            scoreDisplay.textContent = `Score: ${score}`;
+            gameOverMessage.style.display = "none";
+            gameActive = true;
+            startGame();
+        });
+
+        function endGame() {
+            gameActive = false;
+            scoreDisplay.textContent = `Bitdi. Senin xalin: ${score}`;
+            scoreDisplay.style.display = "block";
+        }
+
+        function startGame() {
+            setTimeout(endGame, 20000);
+            setInterval(movePlayer, 1000);
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
